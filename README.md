@@ -709,7 +709,26 @@ function getMapURLByMapId(mapId) {
 
 
 ## Add code
-Add the clock logic
 
+Changes in `UBLS-Web/src/components/index.vue`.
+
+### 1. Update the vue imports (line 156)
+
+Replace the existing vue import near the top of `<script setup>` with:
+
+```js
 import { onMounted, onUnmounted, ref, watchEffect, computed } from "vue"
+```
+
+### 2. Add the agency clock logic
+
+In `<script setup>`, add the agency timezone settings and the code
+that updates the local time.
+
+### 3. Display the local clock
+
+In `<template>`, add the clock display below the notification
+and above the “Find on maps” heading.
+
+
 
