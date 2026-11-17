@@ -6,7 +6,7 @@ for multiple transit agencies.
 ## Preview
 
 <details>
-<summary>full code</summary>
+<summary>Index.vue</summary>
 
 ```vue
 <template>
