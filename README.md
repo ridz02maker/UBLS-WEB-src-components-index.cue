@@ -720,15 +720,98 @@ Replace the existing vue import near the top of `<script setup>` with:
 import { onMounted, onUnmounted, ref, watchEffect, computed } from "vue"
 ```
 
-### 2. Add the agency clock logic
+### 2. Add the agency clock logic (line 176)
 
 In `<script setup>`, add the agency timezone settings and the code
 that updates the local time.
 
-### 3. Display the local clock
+```js
+const agencyClocks = new Map([
+  ['kitami', {
+    timeZone: 'Asia/Tokyo',
+    englishName: 'Kitami',
+    japaneseName: '北見',
+  }],
+  ['natori', {
+    timeZone: 'Asia/Tokyo',
+    englishName: 'Natori',
+    japaneseName: '名取',
+  }],
+  ['gopi', {
+    timeZone: 'Asia/Kuala_Lumpur',
+    englishName: 'GOPI',
+    japaneseName: 'GOPI',
+  }],
+  ['dole', {
+    timeZone: 'Europe/Paris',
+    englishName: 'Dole',
+    japaneseName: 'ドール',
+  }],
+  ['kat', {
+    timeZone: 'America/New_York',
+    englishName: 'Knoxville',
+    japaneseName: 'ノックスビル',
+  }],
+  ['lmt', {
+    timeZone: 'Asia/Colombo',
+    englishName: 'Sri Lanka',
+    japaneseName: 'スリランカ',
+  }],
+])
+
+const clockNow = ref(new Date())
+
+const agencyClock = computed(() => {
+  const agency = route.params.agency || headerRef.value?.currentAgency || 'kitami'
+  console.log('[agency clock]', JSON.stringify(agency), agencyClocks.has(agency))
+  return agencyClocks.get(agency)
+})
+
+const clockFormatter = computed(() => {
+  if (!agencyClock.value) return null
+
+  return new Intl.DateTimeFormat(
+    headerRef.value?.isEnglish ? 'en-GB' : 'ja-JP',
+    {
+      timeZone: agencyClock.value.timeZone,
+      dateStyle: 'medium',
+      timeStyle: 'medium',
+      hourCycle: 'h23',
+    },
+  )
+})
+
+const agencyLocalTime = computed(() => {
+  return clockFormatter.value?.format(clockNow.value) ?? ''
+})
+
+let clockTimer
+
+onMounted(() => {
+  clockTimer = window.setInterval(() => {
+    clockNow.value = new Date()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  window.clearInterval(clockTimer)
+})
+```
+
+### 3. Display the local clock (line 10)
 
 In `<template>`, add the clock display below the notification
 and above the “Find on maps” heading.
+
+```js
+<p v-if="agencyClock" class="m-2 lg:ml-72 text-sm tabular-nums">
+  {{ headerRef?.isEnglish ? 'Local time' : '現地時刻' }}
+  （{{ headerRef?.isEnglish ? agencyClock.englishName : agencyClock.japaneseName }}）
+  <time :datetime="clockNow.toISOString()">{{ agencyLocalTime }}</time>
+</p>
+```
+
+
 
 
 
