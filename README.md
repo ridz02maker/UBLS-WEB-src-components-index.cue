@@ -4,6 +4,11 @@ A bus location system that displays routes and real-time vehicle positions
 for multiple transit agencies.
 
 ## Preview
+
+<details>
+<summary>full code</summary>
+
+```vue
 <template>
   <div>
     <util-header ref="headerRef"/>
@@ -697,6 +702,11 @@ function getMapURLByMapId(mapId) {
   font-family: "Noto Sans JP medium",sans-serif;
 }
 </style>
+
+```
+
+</details>
+
 
 ## Add code
 Add the clock logic
